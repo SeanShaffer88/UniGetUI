@@ -122,7 +122,9 @@ internal sealed class TrayService : IDisposable
 
             _trayIcon.ToolTipText = tooltip + " - UniGetUI";
 
-            bool light = IsTaskbarLight();
+            bool light = TrayIconThemeResolver.ShouldUseLightIcon(
+                Settings.GetValue(Settings.K.TrayIconTheme),
+                IsTaskbarLight());
             string tone = light ? "_black" : "_white";
 
             string uri = $"avares://UniGetUI/Assets/tray_{status}{tone}_legacy.ico";

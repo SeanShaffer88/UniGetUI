@@ -39,6 +39,17 @@ public sealed partial class Interface_P : UserControl, ISettingsPage
         ThemeSelector.ShowAddedItems();
         ThemeSelector.ValueChanged += (_, _) => App.ApplyTheme(CoreSettings.GetValue(CoreSettings.K.PreferredTheme));
 
+        if (CoreSettings.GetValue(CoreSettings.K.TrayIconTheme) == "")
+            CoreSettings.SetValue(CoreSettings.K.TrayIconTheme, "auto");
+
+        TrayIconThemeSelector.AddItem(CoreTools.Translate("Follow system appearance"), "auto");
+        TrayIconThemeSelector.AddItem(CoreTools.Translate("Light"), "light");
+        TrayIconThemeSelector.AddItem(CoreTools.Translate("Dark"), "dark");
+        TrayIconThemeSelector.SettingName = CoreSettings.K.TrayIconTheme;
+        TrayIconThemeSelector.Text = CoreTools.Translate("System tray icon theme:");
+        TrayIconThemeSelector.ShowAddedItems();
+        TrayIconThemeSelector.ValueChanged += (_, _) => MainWindow.Instance?.UpdateSystemTrayStatus();
+
         bool catalogEnabled = CoreSettings.Get(CoreSettings.K.EnableSoftwareCatalog);
         StartupPageSelector.AddItem(CoreTools.Translate("Default"), "default");
         if (catalogEnabled)
