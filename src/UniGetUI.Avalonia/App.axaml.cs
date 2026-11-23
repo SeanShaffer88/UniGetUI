@@ -28,6 +28,8 @@ namespace UniGetUI.Avalonia;
 
 public partial class App : Application
 {
+    private static bool _showQuickStart;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -99,6 +101,7 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            _showQuickStart = ShouldShowQuickStart();
             ApplyTheme(CoreSettings.GetValue(CoreSettings.K.PreferredTheme));
             Dispatcher.UIThread.Post(() => StartMainWindow(desktop), DispatcherPriority.Background);
         }
@@ -123,6 +126,29 @@ public partial class App : Application
 
         ProcessEnvironmentConfigurator.ApplyProxySettingsToProcess();
         CreateAndShowMainWindow(desktop);
+    }
+
+    private static bool ShouldShowQuickStart()
+    {
+        if (CoreSettings.Get(CoreSettings.K.QuickStartCompleted))
+            return false;
+
+        // Let portable users decide whether to import an existing profile before opening onboarding.
+        if (CoreData.IsPortable && PortableDataImport.FindImportableSource() is not null)
+            return false;
+
+        try
+        {
+            string configurationDirectory = CoreData.UniGetUIUserConfigurationDirectory;
+            return !Directory.Exists(configurationDirectory)
+                || Directory.GetFiles(configurationDirectory, "*", SearchOption.TopDirectoryOnly).Length == 0;
+        }
+        catch (Exception ex)
+        {
+            Logger.Warn("Could not determine whether this is a first-run profile; skipping Quick Start.");
+            Logger.Error(ex);
+            return false;
+        }
     }
 
     /// <summary>
@@ -286,6 +312,12 @@ public partial class App : Application
             StartupArgumentProcessor.WarnIfBundlesIgnored(
                 args, $"the launch requested {AvaloniaCliHandler.DAEMON}");
             return;
+        }
+
+        if (_showQuickStart && args.Length == 0)
+        {
+            _showQuickStart = false;
+            await mainWindow.ShowDialogAndRestoreVisibilityAsync(new QuickStartDialog(isFirstRun: true));
         }
 
         RouteSelfUpdateToastAction(args);

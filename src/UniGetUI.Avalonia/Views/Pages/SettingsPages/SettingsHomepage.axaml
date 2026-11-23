@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:UniGetUI.Avalonia.ViewModels.Pages.SettingsPages"
              xmlns:settings="using:UniGetUI.Avalonia.Views.Controls.Settings"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
              xmlns:t="using:UniGetUI.Avalonia.MarkupExtensions"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,6 +12,31 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical" Margin="0,8">
+
+            <settings:SettingsPageButton CornerRadius="8"
+                Icon="Settings"
+                Text="{t:Translate Quick Start}"
+                UnderText="{t:Translate Text='Choose package managers, settings mode, and run an initial scan'}"
+                Command="{Binding OpenQuickStartCommand}"/>
+
+            <Border Height="12"/>
+
+            <Border CornerRadius="8" Padding="12,8" Margin="0,0,0,8"
+                    Background="{DynamicResource AppDialogDarkBackground}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="3" VerticalAlignment="Center">
+                        <TextBlock Text="{t:Translate Advanced settings}"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{t:Translate Text='Show every setting, including developer and system options'}"
+                                   TextWrapping="Wrap"
+                                   Opacity="0.72"/>
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="1"
+                                  IsChecked="{Binding IsAdvancedMode, Mode=TwoWay}"
+                                  VerticalAlignment="Center"
+                                  automation:AutomationProperties.Name="{t:Translate Advanced settings}"/>
+                </Grid>
+            </Border>
 
             <!-- ── General ─────────────────────────────────────────────── -->
             <settings:SettingsPageButton CornerRadius="8"
@@ -38,27 +64,28 @@
 
             <!-- ── Administrator ──────────────────────────────────────── -->
             <settings:SettingsPageButton CornerRadius="8"
+                IsVisible="{Binding IsAdvancedMode}"
                 Icon="UAC"
                 Text="{t:Translate Administrator rights and other dangerous settings}"
                 UnderText="{t:Translate Text='Reduce UAC prompts, elevate installations by default, unlock certain dangerous features, etc.'}"
                 Command="{Binding NavigateToAdministratorCommand}"/>
 
-            <Border Height="16"/>
+            <Border Height="16" IsVisible="{Binding IsAdvancedMode}"/>
 
-            <!-- ── Operations + Updates ───────────────────────────────── -->
+            <!-- ── Operations and update preferences ──────────────────── -->
             <settings:SettingsPageButton CornerRadius="8,8,0,0"
+                IsVisible="{Binding IsAdvancedMode}"
                 Icon="Package"
                 Text="{t:Translate Package operation preferences}"
                 UnderText="{t:Translate Text='Change how UniGetUI checks and installs available updates for your packages'}"
                 Command="{Binding NavigateToOperationsCommand}"/>
-            <settings:SettingsPageButton BorderThickness="1,0,1,1"
-                CornerRadius="0"
+            <settings:SettingsPageButton CornerRadius="8"
                 Icon="Update"
                 Text="{t:Translate Package update preferences}"
                 UnderText="{t:Translate Text='Update check frequency, automatically install updates, etc.'}"
                 Command="{Binding NavigateToUpdatesCommand}"/>
-            <settings:SettingsPageButton BorderThickness="1,0,1,1"
-                CornerRadius="0,0,8,8"
+            <settings:SettingsPageButton CornerRadius="8"
+                IsVisible="{Binding IsAdvancedMode}"
                 Icon="SandClock"
                 Text="{t:Translate Scheduled maintenance}"
                 UnderText="{t:Translate Text='Choose the days and hours when updates are checked and installed, and when backups are made'}"
@@ -82,24 +109,27 @@
                 UnderText="{t:Translate Text='Enable and disable package managers, change default install options, etc.'}"
                 Command="{Binding NavigateToManagersCommand}"/>
 
-            <Border Height="16"/>
+            <Border Height="16" IsVisible="{Binding IsAdvancedMode}"/>
 
             <!-- ── Extensions ─────────────────────────────────────────── -->
             <settings:SettingsPageButton CornerRadius="8"
+                IsVisible="{Binding IsAdvancedMode}"
                 Icon="Extensions"
                 Text="{t:Translate Extensions}"
                 UnderText="{t:Translate Text='Optional tools that go beyond package management'}"
                 Command="{Binding NavigateToExtensionsCommand}"/>
 
-            <Border Height="16"/>
+            <Border Height="16" IsVisible="{Binding IsAdvancedMode}"/>
 
             <!-- ── Internet + Experimental ────────────────────────────── -->
             <settings:SettingsPageButton CornerRadius="8,8,0,0"
+                IsVisible="{Binding IsAdvancedMode}"
                 Icon="Search"
                 Text="{t:Translate Internet connection settings}"
                 UnderText="{t:Translate Text='Proxy settings, etc.'}"
                 Command="{Binding NavigateToInternetCommand}"/>
             <settings:SettingsPageButton x:Name="ExperimentalButton"
+                IsVisible="{Binding IsAdvancedMode}"
                 BorderThickness="1,0,1,1"
                 CornerRadius="0,0,8,8"
                 Icon="Experimental"

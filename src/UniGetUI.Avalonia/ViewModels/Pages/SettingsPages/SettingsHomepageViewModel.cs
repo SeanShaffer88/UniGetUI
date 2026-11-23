@@ -1,12 +1,39 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using UniGetUI.Avalonia.ViewModels;
 using UniGetUI.Avalonia.Views.Pages.SettingsPages;
+using CoreSettings = UniGetUI.Core.SettingsEngine.Settings;
 
 namespace UniGetUI.Avalonia.ViewModels.Pages.SettingsPages;
 
 public partial class SettingsHomepageViewModel : ViewModelBase
 {
     public event EventHandler<Type>? NavigationRequested;
+    public event EventHandler? QuickStartRequested;
+
+    [ObservableProperty]
+    private bool _isAdvancedMode =
+        !string.Equals(
+            CoreSettings.GetValue(CoreSettings.K.SettingsExperienceMode),
+            "Beginner",
+            StringComparison.OrdinalIgnoreCase);
+
+    partial void OnIsAdvancedModeChanged(bool value) =>
+        CoreSettings.SetValue(
+            CoreSettings.K.SettingsExperienceMode,
+            value ? "Advanced" : "Beginner");
+
+    public void RefreshExperienceMode()
+    {
+        string savedMode = CoreSettings.GetValue(CoreSettings.K.SettingsExperienceMode);
+        IsAdvancedMode = !string.Equals(
+            savedMode,
+            "Beginner",
+            StringComparison.OrdinalIgnoreCase);
+    }
+
+    [RelayCommand]
+    private void OpenQuickStart() => QuickStartRequested?.Invoke(this, EventArgs.Empty);
 
     [RelayCommand] private void NavigateToGeneral() => NavigationRequested?.Invoke(this, typeof(General));
     [RelayCommand] private void NavigateToInterface() => NavigationRequested?.Invoke(this, typeof(Interface_P));
