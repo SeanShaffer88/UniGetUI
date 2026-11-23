@@ -86,6 +86,11 @@
                                        CornerRadius="0"
                                        BorderThickness="1,0,1,1"/>
 
+                <settings:ComboboxCard x:Name="TrayIconThemeSelector"
+                                       CornerRadius="0"
+                                       BorderThickness="1,0,1,1"
+                                       IsVisible="{Binding !IsMacOS}"/>
+
                 <settings:ButtonCard x:Name="EditAutostartSettings"
                                      CornerRadius="0,0,8,8"
                                      BorderThickness="1,0,1,1"
