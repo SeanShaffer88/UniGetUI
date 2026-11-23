@@ -1,5 +1,8 @@
 using Avalonia.Controls;
 using UniGetUI.Avalonia.ViewModels.Pages.SettingsPages;
+using UniGetUI.Avalonia.Views;
+using UniGetUI.Avalonia.Views.DialogPages;
+using UniGetUI.Avalonia.Views;
 using UniGetUI.Core.Tools;
 
 namespace UniGetUI.Avalonia.Views.Pages.SettingsPages;
@@ -19,6 +22,14 @@ public sealed partial class SettingsHomepage : UserControl, ISettingsPage
 
         var vm = (SettingsHomepageViewModel)DataContext;
         vm.NavigationRequested += (s, t) => NavigationRequested?.Invoke(s, t);
+        vm.QuickStartRequested += async (_, _) =>
+        {
+            if (MainWindow.Instance is { } window)
+            {
+                await window.ShowDialogAndRestoreVisibilityAsync(new QuickStartDialog());
+                vm.RefreshExperienceMode();
+            }
+        };
 
         ExperimentalButton.UnderText = CoreTools.Translate("Beta features and other options that shouldn't be touched");
     }

@@ -1,0 +1,104 @@
+<dialogs:ImmersiveDialog xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dialogs="using:UniGetUI.Avalonia.Views.DialogPages"
+        xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
+        xmlns:t="using:UniGetUI.Avalonia.MarkupExtensions"
+        x:Class="UniGetUI.Avalonia.Views.DialogPages.QuickStartDialog"
+        Title="{t:Translate Quick Start}"
+        MaxWidth="680"
+        MinWidth="460"
+        MaxHeight="760"
+        MinHeight="460"
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Background="{DynamicResource AppDialogBackground}">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="24,20,24,16" Spacing="14">
+                <TextBlock Text="{t:Translate Welcome to UniGetUI}"
+                           FontSize="24"
+                           FontWeight="Bold"/>
+                <TextBlock Text="{t:Translate Choose your package managers, pick how much of the settings menu to show, and scan your packages.}"
+                           TextWrapping="Wrap"
+                           Opacity="0.82"/>
+
+                <TextBlock Text="{t:Translate Settings mode}"
+                           FontWeight="SemiBold"
+                           Margin="0,4,0,0"/>
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <RadioButton x:Name="BeginnerModeButton"
+                                 GroupName="SettingsExperienceMode"
+                                 automation:AutomationProperties.Name="{t:Translate Beginner}">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="{t:Translate Beginner}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{t:Translate Show essential settings}"
+                                       FontSize="12" Opacity="0.72"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="AdvancedModeButton"
+                                 GroupName="SettingsExperienceMode"
+                                 automation:AutomationProperties.Name="{t:Translate Advanced}">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="{t:Translate Advanced}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{t:Translate Show every setting}"
+                                       FontSize="12" Opacity="0.72"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <TextBlock Text="{t:Translate Package managers}"
+                           FontWeight="SemiBold"
+                           Margin="0,4,0,0"/>
+                <TextBlock Text="{t:Translate Choose which package managers UniGetUI should use for package lists and update checks.}"
+                           TextWrapping="Wrap"
+                           Opacity="0.72"/>
+                <Border CornerRadius="8"
+                        Padding="10,6"
+                        Background="{DynamicResource AppDialogDarkBackground}">
+                    <StackPanel x:Name="ManagerPanel" Spacing="2"/>
+                </Border>
+                <TextBlock x:Name="NoManagersText"
+                           Text="{t:Translate No package managers are available.}"
+                           IsVisible="False"
+                           Opacity="0.72"/>
+                <TextBlock Text="{t:Translate This scan only lists packages. It will not install, update, or remove anything.}"
+                           TextWrapping="Wrap"
+                           Opacity="0.72"/>
+
+                <ProgressBar x:Name="ScanProgress"
+                             IsIndeterminate="True"
+                             IsVisible="False"/>
+                <TextBlock x:Name="ScanResultText"
+                           TextWrapping="Wrap"
+                           IsVisible="False"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1"
+                Background="{DynamicResource AppDialogDarkBackground}"
+                CornerRadius="0,0,8,8"
+                Padding="20,12">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Button x:Name="SkipButton"
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        Content="{t:Translate Skip for now}"
+                        Click="SkipButton_Click"/>
+                <Button x:Name="ScanButton"
+                        Grid.Column="1"
+                        Classes="accent"
+                        Content="{t:Translate Scan now}"
+                        Click="ScanButton_Click"/>
+                <Button x:Name="FinishButton"
+                        Grid.Column="1"
+                        Classes="accent"
+                        IsVisible="False"
+                        Content="{t:Translate Finish}"
+                        Click="FinishButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</dialogs:ImmersiveDialog>
